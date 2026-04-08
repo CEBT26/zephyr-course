@@ -1,0 +1,7 @@
+config LED_BLINKING_PERIOD
+    int "Led Period"
+    default 1000
+    help
+        Sleep time to period
+
+source "Kcofig-zephyr"
