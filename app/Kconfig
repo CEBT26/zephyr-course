@@ -32,7 +32,7 @@ endmenu
 
 menu "Zephyr´s configuration"
 
-source "Kconfig-zephyr"
+source "Kconfig.zephyr"
 
 endmenu
 
