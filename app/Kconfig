@@ -1,8 +1,8 @@
 menu "LED Subsystem"
 
     choice
-        prompt "Led blink speed"
-        default LED_BLINKING_PERIOD_1000MS
+        prompt "Led blink sleep time (1s (medium))"
+        default BLINKING_PERIOD_1000MS
         optional
 
     config BLINKING_PERIOD_250MS

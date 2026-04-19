@@ -3,8 +3,7 @@
 #include <zephyr/logging/log.h>
 
 //Sleep time to delay
-#define SLEEP_TIME_MS config_LED_BLINKING_PERIOD
-
+#define SLEEP_TIME_MS CONFIG_LED_BLINKING_PERIOD
 
 /* The devicetree node identifier for the "led0" alias. */
 #define LED_NODE DT_ALIAS(led0)
