@@ -20,15 +20,58 @@ menu "LED Subsystem"
     endchoice
 
     config LED_BLINKING_PERIOD
-    int 
-    default 250 if BLINKING_PERIOD_250MS
-    default 500 if BLINKING_PERIOD_500MS
-    default 1000 if BLINKING_PERIOD_1000MS
-    default 2000 if BLINKING_PERIOD_2000MS
-    default 0
+        int 
+        default 250 if BLINKING_PERIOD_250MS
+        default 500 if BLINKING_PERIOD_500MS
+        default 1000 if BLINKING_PERIOD_1000MS
+        default 2000 if BLINKING_PERIOD_2000MS
+        default 0
+        help
+            Sleep time to period
+
+    config ADVANCE_SETTINGS
+        bool "Advanced LED settings"
     help
-        Sleep time to period
+            Advance led settings
+
+    #if ADVANCE_SETTINGS
+
+    config LED_BRIGHTNESS
+        int "Led brightness (0-100)"
+        depends on ADVANCE_SETTINGS
+        default 50
+        range 0 100
+        help
+            Led % brightness
+
+    config LED_FADE_DURATION
+        int "Led fade brightness (ms)"
+        depends on ADVANCE_SETTINGS
+        default 100
+        range 0 5000
+        help
+            Led fade duration
+
+    menu "Expert settings"
+        depends on ADVANCE_SETTINGS
+        config LED_DEBUG
+        bool "Enabled led debugging"
+        help
+            Debug led bliking.
+
+        config CUSTOM_BLINK_PATTERN
+        bool "Custom blink pattern"
+        help
+            Custom blink pattern
+
+    endmenu
+
+
+    #endif
+
 endmenu
+
+#rsource "deps/Kconfig.deps"
 
 menu "Zephyr´s configuration"
 
