@@ -1,0 +1,11 @@
+/{
+    aliases{
+        led0 = &ledGreen;
+    };
+    leds:led {
+        ledGreen:led1 {
+            gpios = <&gpiob 0 GPIO_ACTIVE_LOW>;
+            label = "User LD0";
+        };
+    };
+};
