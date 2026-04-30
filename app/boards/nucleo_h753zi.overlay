@@ -1,0 +1,27 @@
+/{
+    aliases{
+        ld1-green=&ledGreen;
+        ld2-orange=&ledOrange;
+        ld3-red=&ledRed;
+    };
+    /* Label New Node */
+    ledos:led {
+        compatible = "gpio-leds";
+        /* Nodo */
+        ledGreen:led_1 {
+            /*gpios = <&gpio2 9 GPIO_ACTIVE_HIGH>; */
+            gpios = <&gpiob 0 GPIO_ACTIVE_LOW>; /*nucleo_h753zi */
+            label = "User LD1";
+        };
+        /* Nodo */
+        ledOrange:led_2 {
+            gpios = <&gpioe 1 GPIO_ACTIVE_LOW>; 
+            label = "User LD2";
+        };
+        /* Nodo */
+        ledRed:led3 {
+            gpios = <&gpiob 14 GPIO_ACTIVE_LOW>;
+            label = "User LD3";
+        };
+    };
+};
