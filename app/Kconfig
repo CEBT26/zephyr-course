@@ -1,0 +1,25 @@
+menu "Led blinking period condiguration"
+
+    choice 
+        prompt "Led speeds"
+        default BLINKING_500MS
+        optional
+
+    config BLINKING_500MS
+        bool "500ms"
+
+    endchoice
+
+    config APP_HEARTBEAT_PERIOD_MS
+        int 
+        default 500 if BLINKING_500MS
+        default 0
+        range 10 2000
+        help
+            Sleep time to period
+
+endmenu
+
+menu "Zephyr configuration"
+    source "Kconfig.zephyr"
+endmenu
