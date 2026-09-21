@@ -14,9 +14,9 @@ LOG_MODULE_REGISTER(main, LOG_LEVEL_INF);
 int main(void)
 {
     bool led_state = true;
-
+    /* Verify if led0 is ready*/
     if (!gpio_is_ready_dt(&led)) return 0;
-
+    /* Led configuration */
     if (gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE) < 0) return 0;
 
     while (1) {
@@ -25,7 +25,7 @@ int main(void)
         led_state = !led_state;
         LOG_INF("LED state: %s", led_state ? "ON" : "OFF");
         //k_msleep(SLEEP_TIME_MS);
-        k_msleep(LED_BLINK_SLEEP_TIME);
+        k_msleep(CONFIG_LED_BLINK_SLEEP_TIME);
     }
     return 0;
 }
