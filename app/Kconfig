@@ -26,9 +26,10 @@ if LED_SUBSYSTEM
         int 
         depends on LED_SUBSYSTEM
         default 250 if LED_BLINK_SLEEP_250MS
+        default 500 if LED_BLINK_SLEEP_500MS
         default 1000 if LED_BLINK_SLEEP_1000MS
         default 2000 if LED_BLINK_SLEEP_2000MS
-        default 500
+        default 100
         help
             Sleep time to period.
 
@@ -70,7 +71,12 @@ if LED_SUBSYSTEM
 
 endif
 
-source "Kconfig.zephyr"
+
+menu "Zaphyr configuration"
+
+    source "Kconfig.zephyr"
+
+endmenu
 
 #Baic menu
 #menu "LED Settings"
