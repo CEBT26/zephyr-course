@@ -1,0 +1,6 @@
+board:
+  name: cebt_my_board
+  full_name: CEBT My Board
+  vendor: CEBT
+  socs:
+  - name: mcxa156
