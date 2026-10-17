@@ -1,0 +1,7 @@
+#File with the software´s configuration
+
+config OUR_DRIVER
+    bool "Enable our driver"
+    default y
+    help
+      Enable our custom driver.

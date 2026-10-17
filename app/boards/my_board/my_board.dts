@@ -19,6 +19,11 @@
 		zephyr,code-partition = &slot0_partition;
 	};
 
+	our_driver0: our_driver{
+		compatible = "our,driver";
+		status = "okay";
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		red_led: led_0 {
