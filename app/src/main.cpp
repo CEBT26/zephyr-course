@@ -25,12 +25,12 @@ int main(void)
     }
 
     while (1) {
-    // Ejecuta sensor_sample_fetch_impl()
-    sensor_sample_fetch(driver);
+        // Ejecuta sensor_sample_fetch_impl()
+        sensor_sample_fetch(driver);
 
-    // Ejecuta sensor_channel_get_impl()
-    sensor_channel_get(driver, SENSOR_CHAN_AMBIENT_TEMP, &val);
-        k_msleep(SLEEP_TIME_MS);
+        // Ejecuta sensor_channel_get_impl()
+        sensor_channel_get(driver, SENSOR_CHAN_AMBIENT_TEMP, &val);
+        k_msleep(CONFIG_BLINK_SLEEP_TIME_MS);
     }
     return 0;
 }
