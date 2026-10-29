@@ -22,9 +22,10 @@ val -> Pointer to look the value of the read channel.
 */
 static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel chan, struct sensor_value *val)
 {
-    LOG_INF("Hello from channel get, Estatus of led: %s", led_state ? "ON" : "OFF");
-    val->val1 = led_state ? 1 : 0;
-    val->val2 = 0;
+    LOG_INF("Hello from channel get, Estatus of led: %s", val->val1 ? "ON" : "OFF");
+    //val->val1 = led_state ? 1 : 0;
+    //val->val2 = 0;
+    val->val1 = gpio_pin_get_dt(&led);
     return 0;
 }
 
