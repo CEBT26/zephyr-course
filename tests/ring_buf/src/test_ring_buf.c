@@ -57,6 +57,16 @@ ZTEST(ring_buf_init, test_reinit_clears_state)
 	//ztest_test_skip();
 }
 
+ZTEST(ring_buf_init, test_return_EINVAL_CAPACITY_ZERO)
+{
+	zassert_equal(rb_init(0), -EINVAL,  "The capacity of buffer is zero");
+}
+
+ZTEST(ring_buf_init, test_return_EINVAL_MAX_CAPACITY)
+{
+	zassert_equal(rb_init(17), -EINVAL,  "The capacity of buffer is only for 16 elements");
+}
+
 /*
  * ============================================================================
  * Test Suite: ring_buf_push_pop
@@ -119,6 +129,17 @@ ZTEST(ring_buf_push_pop, test_push_full_returns_enospc)
 	//ztest_test_skip();
 }
 
+ZTEST(ring_buf_push_pop, test_pop_return_enodata)
+{
+    int value = 0;
+
+    zassert_true(rb_is_empty(), "Fresh buffer must be empty");
+    zassert_equal(rb_count(), 0U, "Fresh buffer count must be 0");
+
+    zassert_equal(rb_pop(&value), -ENODATA,
+                  "Pop from an empty buffer must return -ENODATA");
+}
+
 /*
  * ============================================================================
  * Test Suite: ring_buf_boundaries
@@ -168,4 +189,20 @@ ZTEST(ring_buf_boundaries, test_is_full_after_fill)
 	zassert_true(rb_is_full(), "Verify if the buffer is full");
 	zassert_equal(rb_count(), 4, "Fresh buffer count must be 4");
 	//ztest_test_skip();
+}
+
+ZTEST(ring_buf_boundaries, test_peek_return_einval)
+{
+	zassert_equal(rb_peek(NULL), -EINVAL, "The value is NULL");
+}
+
+ZTEST(ring_buf_boundaries, test_peek_return_enodata)
+{
+    int value = 0;
+
+    zassert_true(rb_is_empty(), "Fresh buffer must be empty");
+    zassert_equal(rb_count(), 0U, "Fresh buffer count must be 0");
+
+    zassert_equal(rb_peek(&value), -ENODATA,
+                  "Pop from an empty buffer must return -ENODATA");
 }
