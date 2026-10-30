@@ -47,7 +47,14 @@ ZTEST(ring_buf_init, test_reinit_clears_state)
 	 * verify the buffer is empty and count is 0.
 	 * See TEST_SPEC.md "Suite ring_buf_init" #2.
 	 */
-	ztest_test_skip();
+	zassert_ok(rb_push(10), "Added a value into of the buffer");
+	zassert_equal(rb_count(), 1, "Fresh buffer count must be 0");
+	zassert_ok(rb_init(4), "Buffer reinitialized");
+
+	zassert_true(rb_is_empty(), "Fresh buffer must be empty");
+	zassert_equal(rb_count(), 0, "Fresh buffer count must be 0");
+
+	//ztest_test_skip();
 }
 
 /*
@@ -64,7 +71,13 @@ ZTEST(ring_buf_push_pop, test_single_push_pop)
 	/* TODO(l8-task1): rb_push(42), rb_pop(&v) -> v == 42, buffer empty after.
 	 * See TEST_SPEC.md "Suite ring_buf_push_pop" #1.
 	 */
-	ztest_test_skip();
+	int v;
+
+	zassert_ok(rb_push(42), "Added a new value in the buffer");
+	zassert_ok(rb_pop(&v), "Pop the last value in front of the buffer");
+
+	zassert_true(rb_is_empty(), "Fresh buffer must be empty");
+	//ztest_test_skip();
 }
 
 ZTEST(ring_buf_push_pop, test_fifo_order)
@@ -73,7 +86,19 @@ ZTEST(ring_buf_push_pop, test_fifo_order)
 	 * and verify the values come out as 1, 2, 3 in that order.
 	 * See TEST_SPEC.md "Suite ring_buf_push_pop" #2.
 	 */
-	ztest_test_skip();
+	int v;
+
+	zassert_ok(rb_push(1), "Added first value");
+	zassert_ok(rb_push(2), "Added second value");
+	zassert_ok(rb_push(3), "Added third value");
+
+	zassert_ok(rb_pop(&v), "Pop failed");
+	zassert_equal(v, 1, "Expected first value to be 1");
+	zassert_ok(rb_pop(&v), "Pop failed");
+	zassert_equal(v, 2, "Expected second value to be 2");
+	zassert_ok(rb_pop(&v), "Pop failed");
+	zassert_equal(v, 3, "Expected third value to be 3");
+	//ztest_test_skip();
 }
 
 ZTEST(ring_buf_push_pop, test_push_full_returns_enospc)
@@ -82,7 +107,16 @@ ZTEST(ring_buf_push_pop, test_push_full_returns_enospc)
 	 * one more value -> -ENOSPC.
 	 * See TEST_SPEC.md "Suite ring_buf_push_pop" #3.
 	 */
-	ztest_test_skip();
+	zassert_ok(rb_push(1), "Added first value");
+	zassert_ok(rb_push(2), "Added second value");
+	zassert_ok(rb_push(3), "Added third value");
+	zassert_ok(rb_push(4), "Added fourth value");
+
+	zassert_true(rb_is_full(), "Verify if the buffer is full");
+
+	zassert_equal(rb_push(4), -ENOSPC,  "The buffer is only for 4 elements, Buffer is full");
+
+	//ztest_test_skip();
 }
 
 /*
@@ -100,7 +134,15 @@ ZTEST(ring_buf_boundaries, test_peek_does_not_consume)
 	 * -> v == 7; rb_count() still == 1.
 	 * See TEST_SPEC.md "Suite ring_buf_boundaries" #1.
 	 */
-	ztest_test_skip();
+	int v;
+
+	zassert_ok(rb_push(7), "Added a value into the buffer");
+	zassert_ok(rb_peek(&v), "Peek failed");
+	zassert_ok(rb_peek(&v), "Peek failed");
+
+	zassert_equal(rb_count(), 1, "Fresh buffer count must be 1");
+
+	//ztest_test_skip();
 }
 
 ZTEST(ring_buf_boundaries, test_pop_null_returns_einval)
@@ -108,7 +150,9 @@ ZTEST(ring_buf_boundaries, test_pop_null_returns_einval)
 	/* TODO(l8-task1): rb_pop(NULL) -> -EINVAL.
 	 * See TEST_SPEC.md "Suite ring_buf_boundaries" #2.
 	 */
-	ztest_test_skip();
+
+	zassert_equal(rb_pop(NULL), -EINVAL, "Pointer NULL"); 
+	//ztest_test_skip();
 }
 
 ZTEST(ring_buf_boundaries, test_is_full_after_fill)
@@ -116,5 +160,12 @@ ZTEST(ring_buf_boundaries, test_is_full_after_fill)
 	/* TODO(l8-task1): push 4 values -> rb_is_full() == true, rb_count() == 4.
 	 * See TEST_SPEC.md "Suite ring_buf_boundaries" #3.
 	 */
-	ztest_test_skip();
+	zassert_ok(rb_push(1), "Added first value");
+	zassert_ok(rb_push(2), "Added second value");
+	zassert_ok(rb_push(3), "Added third value");
+	zassert_ok(rb_push(4), "Added fourth value");
+
+	zassert_true(rb_is_full(), "Verify if the buffer is full");
+	zassert_equal(rb_count(), 4, "Fresh buffer count must be 4");
+	//ztest_test_skip();
 }
