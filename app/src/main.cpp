@@ -3,6 +3,8 @@
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/device.h>
+//#include "../drivers/our_driver/our_driver.h"
+#include "our_driver.h"
 
 #define SLEEP_TIME_MS 1000
 
@@ -24,12 +26,29 @@ int main(void)
         return 0;
     }
 
-    while (1) {
-        // Ejecuta sensor_sample_fetch_impl()
-        sensor_sample_fetch(driver);
+    while (1)
+    {
 
-        // Ejecuta sensor_channel_get_impl()
+        // Driver Extension API: Turn ON LED
+        our_driver_set_state(driver, true);
+
+        // sensor_channel_get_impl()
         sensor_channel_get(driver, SENSOR_CHAN_AMBIENT_TEMP, &val);
+        
+        LOG_INF("LED state: %d", val.val1);
+
+        k_msleep(CONFIG_BLINK_SLEEP_TIME_MS);
+
+        // Driver Extension API: Turn OFF LED
+        our_driver_set_state(driver, false);
+
+        // Read LED state
+        sensor_channel_get(driver,
+                           SENSOR_CHAN_AMBIENT_TEMP,
+                           &val);
+
+        LOG_INF("LED state: %d", val.val1);
+
         k_msleep(CONFIG_BLINK_SLEEP_TIME_MS);
     }
     return 0;
