@@ -15,6 +15,14 @@
 /* System clock frequency. */
 extern uint32_t SystemCoreClock;
 
+static int cebt_my_board_init(void)
+{
+	printk("Board inicialized\n");
+	return 0;
+}
+
+SYS_INIT(cebt_my_board_init, APPLICATION, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT);
+
 void board_early_init_hook(void)
 {
 	uint32_t coreFreq;
