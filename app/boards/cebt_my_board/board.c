@@ -17,7 +17,7 @@ extern uint32_t SystemCoreClock;
 
 static int cebt_my_board_init(void)
 {
-	printk("Board inicialized\n");
+	printk("Board Initialized\n");
 	return 0;
 }
 
