@@ -2,6 +2,9 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/drivers/gpio.h>
 
+#define LED_ON  1
+#define LED_OFF 0
+
 //If in a .dts file exist a node with compatible = "our,driver"
 #define DT_DRV_COMPAT our_driver
 //Register a log module
@@ -22,10 +25,19 @@ val -> Pointer to look the value of the read channel.
 */
 static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel chan, struct sensor_value *val)
 {
-    LOG_INF("Hello from channel get, Estatus of led: %s", led_state ? "ON" : "OFF");
-    val->val1 = led_state ? 1 : 0;
-    val->val2 = 0;
-    return 0;
+    //LOG_INF("Hello from channel get, Estatus of led: %s", led_state ? "ON" : "OFF");
+    //val->val1 = led_state ? 1 : 0;
+    //val->val2 = 0;
+
+    val->val1 = gpio_pin_set_dt(&led, LED_OFF);
+    LOG_INF("Hello from channel get, State of led: %s", val->val1 ? "ON" : "OFF");
+
+    if(val->val1 != 0)
+    {
+        LOG_INF("ERRROR to LED OFF");
+    }
+
+    return val->val1;
 }
 
 static int sensor_sample_fetch_impl(const struct device *dev, enum sensor_channel chan)
@@ -33,20 +45,16 @@ static int sensor_sample_fetch_impl(const struct device *dev, enum sensor_channe
     ARG_UNUSED(dev);
     ARG_UNUSED(chan);
 
-    LOG_INF("Fetching sample: toggling LED");
+    LOG_INF("Hello from Fetching sample: LED ON");
+    led_state = gpio_pin_set_dt(&led, LED_ON);
+    LOG_INF("State of led: %s", led_state == 0 ? "ON" : "OFF");
 
-    int ret = gpio_pin_toggle_dt(&led);
-
-    if (ret < 0)
+    if (led_state != 0)
     {
-        LOG_ERR("Failed to toggle LED: %d", ret);
-        return ret;
+        LOG_ERR("Failed to LED ON: %d", led_state);
     }
 
-    // Actualizar el estado lógico solo si el GPIO tuvo éxito.
-    led_state = !led_state;
-
-    return 0;
+    return led_state;
 }
 
 //Conection with the generic sensor´s API
