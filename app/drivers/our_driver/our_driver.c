@@ -25,6 +25,8 @@ static int sensor_channel_get_impl(const struct device *dev, enum sensor_channel
     LOG_INF("Hello from channel get, Estatus of led: %s", led_state ? "ON" : "OFF");
     val->val1 = led_state ? 1 : 0;
     val->val2 = 0;
+    // Actualizar el estado lógico solo si el GPIO tuvo éxito.
+    led_state = !led_state;
     return 0;
 }
 
@@ -44,7 +46,7 @@ static int sensor_sample_fetch_impl(const struct device *dev, enum sensor_channe
     }
 
     // Actualizar el estado lógico solo si el GPIO tuvo éxito.
-    led_state = !led_state;
+    //led_state = !led_state;
 
     return 0;
 }
