@@ -8,12 +8,6 @@
 static const struct device *sensor_dev =
     DEVICE_DT_GET(SENSOR_NODE);
 
-bool led_state1 = true;
-
-#define LED_NODE DT_ALIAS(led0)
-
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED_NODE, gpios);
-
 static int cmd_channel_fetch_handler(const struct shell *sh, size_t argc, char **argv)
 {
     ARG_UNUSED(argc);
@@ -31,25 +25,46 @@ static int cmd_channel_fetch_handler(const struct shell *sh, size_t argc, char *
     return 0;
 }
 
-static int cmd_channel_get_handler(const struct shell *sh, size_t argc, char **argv)
+static int cmd_channel_get_handler(const struct shell *sh,
+                                   size_t argc, char **argv)
 {
-    shell_info(sh, "Hello since shell channel: %s", led_state1 ? "ON" : "OFF");
-    led_state1 = led_state1 ? 1 : 0;
-    led_state1 = !led_state1;
+    ARG_UNUSED(argc);
+    ARG_UNUSED(argv);
+
+    struct sensor_value val;
+
+    int ret = sensor_channel_get(sensor_dev,
+                                 SENSOR_CHAN_AMBIENT_TEMP,
+                                 &val);
+
+    if (ret < 0) {
+        shell_error(sh, "Channel get failed: %d", ret);
+        return ret;
+    }
+
+    shell_info(sh, "Sensor value: val1=%d, val2=%d",
+               val.val1, val.val2);
+
     return 0;
 }
 
-static int sensor_info(const struct shell *sh, size_t argc, char **argv)
+static int cmd_sensor_info_handler(const struct shell *sh, size_t argc, char **argv)
 {
-    shell_info(sh, "LED since shell, GPIO: %s, Pin: %d",led.port->name, led.pin);
+
+    ARG_UNUSED(argc);
+    ARG_UNUSED(argv);
+
+    shell_info(sh, "Sensor device name: %s", sensor_dev->name);
+    shell_info(sh, "Device is ready: %s",
+               device_is_ready(sensor_dev) ? "YES" : "NO");
     return 0;
 }
 
 /* Create subcommands array for "demo" */
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_sensor,
 SHELL_CMD_ARG(fetch, NULL, "Show sensor information.", cmd_channel_fetch_handler, 1, 0),
-SHELL_CMD_ARG(read, NULL, "Get channel.", cmd_channel_get_handler, 2, 0),
-SHELL_CMD_ARG(info, NULL, "Show device information.", sensor_info, 1,0),
+SHELL_CMD_ARG(get, NULL, "Get channel.", cmd_channel_get_handler, 1, 0),
+SHELL_CMD_ARG(info, NULL, "Show device information.", cmd_sensor_info_handler, 1,0),
 SHELL_SUBCMD_SET_END
 );
 
